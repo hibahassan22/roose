@@ -1,8 +1,15 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { quickLinks, shopTags } from "@/lib/home-data";
+import { categories, quickLinks, shopTags } from "@/lib/home-data";
 import { BrandMark } from "./brand-mark";
+
+const tagHref: Record<string, string> = Object.fromEntries([
+  ...categories.map((c) => [c.name, `/category/${c.id}`] as const),
+  ["قسم الجملة", "/category/wholesale"],
+  ["عطور", "/category/bouquets"],
+  ["تغريسات", "/category/wraps"],
+]);
 
 const socials = [
   { label: "إنستغرام", src: "/images/icons/social-instagram.png" },
@@ -67,7 +74,7 @@ export function SiteFooter() {
               {shopTags.map((tag) => (
                 <li key={tag}>
                   <Link
-                    href="#categories"
+                    href={tagHref[tag] ?? "#categories"}
                     className="inline-flex rounded-full bg-white px-3.5 py-2 text-sm font-semibold text-[#6B5A63] ring-1 ring-[#E8CFDB] transition hover:text-[#B0005A]"
                   >
                     {tag}
@@ -85,7 +92,20 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-3 text-base text-[#6B5A63]">
               {quickLinks.map((link) => (
                 <li key={link}>
-                  <Link href="#" className="transition hover:text-[#B0005A]">
+                  <Link
+                    href={
+                      link === "السلة"
+                        ? "/cart"
+                        : link === "المفضلة"
+                          ? "/favorites"
+                          : link === "تتبع طلبك"
+                            ? "/track"
+                            : link === "الأقسام"
+                              ? "/category/bouquets"
+                              : "#"
+                    }
+                    className="transition hover:text-[#B0005A]"
+                  >
                     {link}
                   </Link>
                 </li>

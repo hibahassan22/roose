@@ -2,10 +2,16 @@
 
 import { Search } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BrandMark } from "./brand-mark";
 import { IconCart, IconHeart, IconMenu, IconTruck, IconUser } from "./site-icons";
 
-export function SiteHeader() {
+export function SiteHeader({ cartBadge = "3" }: { cartBadge?: string }) {
+  const pathname = usePathname();
+  const onFavorites = pathname === "/favorites";
+  const onCart = pathname === "/cart";
+  const onTrack = pathname === "/track";
+
   return (
     <header className="sticky top-0 z-50 w-full">
       {/* Keep header clear so bouquet can show through the glassy search */}
@@ -25,10 +31,19 @@ export function SiteHeader() {
             <IconButton label="حسابي">
               <IconUser className="size-5" />
             </IconButton>
-            <IconButton label="المفضلة">
+            <IconButton
+              label="المفضلة"
+              href="/favorites"
+              active={onFavorites}
+            >
               <IconHeart className="size-5" />
             </IconButton>
-            <IconButton label="سلة التسوق" badge="3">
+            <IconButton
+              label="سلة التسوق"
+              badge={onFavorites ? "0" : cartBadge}
+              href="/cart"
+              active={onCart}
+            >
               <IconCart className="size-5" />
             </IconButton>
           </div>
@@ -54,8 +69,13 @@ export function SiteHeader() {
           </form>
 
           <Link
-            href="#track"
-            className="ms-auto hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-2 text-xs font-bold text-brand transition hover:bg-white/35 sm:inline-flex lg:text-sm"
+            href="/track"
+            aria-current={onTrack ? "page" : undefined}
+            className={`ms-auto hidden shrink-0 items-center gap-1.5 rounded-full px-2.5 py-2 text-xs font-bold text-brand transition sm:inline-flex lg:text-sm ${
+              onTrack
+                ? "bg-white/70 shadow-[0_4px_12px_-6px_rgba(176,0,90,0.35)]"
+                : "hover:bg-white/35"
+            }`}
           >
             <IconTruck className="size-5" />
             تتبع الطلب
@@ -69,24 +89,42 @@ export function SiteHeader() {
 function IconButton({
   label,
   badge,
+  href,
+  active,
   children,
 }: {
   label: string;
   badge?: string;
+  href?: string;
+  active?: boolean;
   children: React.ReactNode;
 }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      className="relative inline-flex size-10 items-center justify-center rounded-full text-brand transition hover:bg-white/35"
-    >
+  const className = `relative inline-flex size-10 items-center justify-center rounded-full text-brand transition ${
+    active ? "bg-white/70 shadow-[0_4px_12px_-6px_rgba(176,0,90,0.35)]" : "hover:bg-white/35"
+  }`;
+
+  const content = (
+    <>
       {children}
       {badge != null ? (
         <span className="absolute top-0.5 left-0.5 flex size-4 items-center justify-center rounded-full bg-brand-hot text-[0.6rem] font-bold text-white">
           {badge}
         </span>
       ) : null}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} aria-label={label} className={className} aria-current={active ? "page" : undefined}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button type="button" aria-label={label} className={className}>
+      {content}
     </button>
   );
 }

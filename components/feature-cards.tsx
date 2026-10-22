@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { DeliveryPricesButton } from "./delivery-prices-modal";
 
 const cards = [
   {
@@ -16,8 +16,7 @@ const cards = [
       </>
     ),
     cta: "أسعار التوصيل",
-    href: "#",
-    tone: "brand" as const,
+    tone: "delivery" as const,
     image: "/images/illust-delivery.png",
   },
   {
@@ -69,15 +68,12 @@ export function FeatureCards() {
                         <WhatsAppIcon className="size-4" />
                         {card.cta}
                       </a>
-                    ) : (
-                      <Link
-                        href={card.href ?? "#"}
-                        className="inline-flex h-10 items-center gap-1 rounded-full bg-[#B0005A] px-5 text-sm font-bold text-white transition hover:bg-[#96004c]"
-                      >
+                    ) : card.tone === "delivery" ? (
+                      <DeliveryPricesButton className="inline-flex h-10 items-center gap-1 rounded-full bg-[#B0005A] px-5 text-sm font-bold text-white transition hover:bg-[#96004c]">
                         {card.cta}
                         <ChevronLeft className="size-4" strokeWidth={2.5} />
-                      </Link>
-                    )}
+                      </DeliveryPricesButton>
+                    ) : null}
                   </div>
                 ) : null}
               </div>

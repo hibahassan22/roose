@@ -22,7 +22,7 @@ export function Categories() {
             className="shrink-0"
           >
             <Link
-              href={`#${category.id}`}
+              href={`/category/${category.id}`}
               className="group flex w-[5.25rem] flex-col items-center gap-2.5 text-center sm:w-auto"
             >
               <span className="inline-flex size-[4.75rem] shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#f7e9f0] transition group-hover:bg-white group-hover:shadow-[0_8px_20px_-10px_rgba(155,16,72,0.35)] sm:size-20">
